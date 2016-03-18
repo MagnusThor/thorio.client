@@ -1,2 +1,4 @@
 # thorio.client
-JavaScript client lib for thor.io 
+JavaScript client library for thor.io 
+
+Documentation found at -  https://github.com/MagnusThor/thorio/wiki/Client-(client)
