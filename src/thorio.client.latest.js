@@ -31,19 +31,15 @@ ThorIOClient.Factory = (function () {
             this.ws.send(new ThorIOClient.Message("$close_", {}, this.alias))
             return this;
         };
-        
         ctor.prototype.subscribe = function (t, fn) {
             this.on(t, fn)
             this.ws.send(new ThorIOClient.Message("subscribe", {topic:t,controller: this.alias}, this.alias))
             return this;
         };
-        
-        ctor.prototype.unsubscribe = function (t){
-       
+        ctor.prototype.unsubscribe = function (t) {
             this.ws.send(new ThorIOClient.Message("unsubscribe", { topic: t, controller: this.alias }, this.alias))
-    
             return this;
-        }
+        };
 
         ctor.prototype.on = function (t, fn) {
             this.listeners.push({
@@ -63,18 +59,20 @@ ThorIOClient.Factory = (function () {
         ctor.prototype.invoke = function (t, d, c) {
             this.ws.send(new ThorIOClient.Message(t, d, c || this.alias));
             return this;
-        }
-
+        };
         ctor.prototype.setProperty = function (name, value, controller) {
             var property = "$set_" + name;
             var data;
             this.invoke(property, value, controller || this.alias);
             return this;
         };
+       
 
         ctor.prototype.dispatch = function (t, d) {
             if (t === "$open_") {
-                this.onopen([JSON.parse(d)]);
+                d = JSON.parse(d);
+                localStorage.setItem("pid", d.PI);
+                this.onopen(d);
                 return;
             } else if (t === "$close_") {
                 this.onclose([JSON.parse(d)]);
@@ -89,15 +87,29 @@ ThorIOClient.Factory = (function () {
         };
         ctor.prototype.onopen = function () {
         };
-        ctor.prototype.onopen = function () {
+        
+        ctor.prototype.onclose = function () {
         };
+      
         return ctor;
     })();
-
-    var ctor = function (url, controllers) {
+    
+    function toQuery(obj) {
+        return '?' + 
+        Object.keys(obj).map(function (key) {
+            return encodeURIComponent(key) + '=' +
+                encodeURIComponent(obj[key]);
+        }).join('&');
+    };
      
+    var ctor = function (url, controllers, params) {
+        params = params || {};
+        if (localStorage.hasOwnProperty("pid")) 
+            params["pid"] = (localStorage.getItem("pid"))
         var self = this;
-        var ws = new WebSocket(url);
+
+        var ws = new WebSocket(url + toQuery(params));
+
         this.controllers = controllers;
         this.channels = [];
         ws.onmessage = function (event) {
