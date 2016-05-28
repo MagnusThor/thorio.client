@@ -1,0 +1,19 @@
+{
+  "name": "thorio.client",
+  "version": "1.0.0",
+  "description": "1.0.1",
+  "main": "src/thorio.client.latest.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MagnusThor/thorio.client.git"
+  },
+  "author": "magnus thor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MagnusThor/thorio.client/issues"
+  },
+  "homepage": "https://github.com/MagnusThor/thorio.client#readme"
+}
